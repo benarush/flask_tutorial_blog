@@ -17,11 +17,11 @@ posts = [
     }
 ]
 
-
+title = "Tomer Title"
 @app.route("/home")
 @app.route("/")
 def hello():
-    return render_template("home.html", posts=posts)
+    return render_template("home.html", posts=posts, title=title)
 
 
 @app.route("/about")
