@@ -1,3 +1,5 @@
 .idea/.gitignore
 .idea
 flask_env
+.DS_Store
+flaskblog/static/.DS_Store
