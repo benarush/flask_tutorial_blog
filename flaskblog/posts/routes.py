@@ -1,11 +1,33 @@
 from flask import (render_template, url_for, flash,
-                   redirect, request, abort, Blueprint)
+                   redirect, request, abort, Blueprint, jsonify)
 from flask_login import current_user, login_required
 from flaskblog import db
 from flaskblog.models import Post, User
 from flaskblog.posts.forms import PostForm
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from datetime import datetime
+
 
 posts = Blueprint('posts', __name__,)
+
+@posts.route("/loginapi", methods=["POST"])
+def login():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if username != "test" or password != "test":
+        return jsonify({"msg": "Bad username or password"}), 401
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token)
+
+
+# Protect a route with jwt_required, which will kick out requests
+# without a valid JWT present.
+@posts.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
 
 
 @posts.route("/post/new", methods=['GET', 'POST'])
