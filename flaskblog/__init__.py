@@ -7,6 +7,8 @@ from flaskblog.config import Config
 from flask_jwt_extended import JWTManager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -16,6 +18,9 @@ login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 
 mail = Mail()
+
+migrate = Migrate()
+manager = Manager()
 
 jwt = JWTManager()
 
@@ -32,6 +37,9 @@ def create_app(config_class=Config):
     mail.init_app(app)
     jwt.init_app(app)
     admin.init_app(app)
+    migrate.init_app(app, db)
+    manager.__init__(app)
+    manager.add_command('db', MigrateCommand)
 
     from flaskblog.users.routes import users
     from flaskblog.posts.routes import posts
@@ -45,4 +53,6 @@ def create_app(config_class=Config):
     admin.add_view(ModelView(Post, db.session))
     admin.add_view(ModelView(User, db.session))
 
-    return app
+    manager.add_command('db', MigrateCommand)
+
+    return app, manager

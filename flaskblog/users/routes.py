@@ -1,12 +1,37 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog import db, bcrypt
 from flaskblog.models import User, Post
 from flaskblog.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                    RequestResetForm, ResetPasswordForm)
 from flaskblog.users.utils import save_picture, send_reset_email
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from datetime import datetime
 
 users = Blueprint('users', __name__)
+
+
+
+@users.route("/loginapi", methods=["POST"])
+def get_token():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    user = User.query.filter_by(email=username).first()
+    if user and bcrypt.check_password_hash(user.password, password):
+        access_token = create_access_token(identity=user.email)
+        return jsonify(access_token=access_token)
+    return jsonify("Error - refuse , check if the username or the password are correct"), 401
+
+
+# Protect a route with jwt_required, which will kick out requests
+# without a valid JWT present.
+@users.route("/get_user", methods=["GET"])
+@jwt_required()
+def get_user():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = User.query.filter_by(email=get_jwt_identity()).first()
+    user_dict_data = {"username": current_user.username, "email": current_user.email, "image": current_user.image_file}
+    return jsonify(user=user_dict_data), 200
 
 
 @users.route("/reset_password", methods=['GET', 'POST'])

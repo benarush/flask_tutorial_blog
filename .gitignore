@@ -3,3 +3,4 @@
 flask_env
 .DS_Store
 flaskblog/static/.DS_Store
+migrations
