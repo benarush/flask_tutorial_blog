@@ -18,7 +18,10 @@ class TestingJWT:
         return r.status_code
 
     def get_user_data(self):
-        r = requests.get("http://127.0.0.1:5000/user/api")
+        r = requests.get("http://127.0.0.1:5000/user/api",
+                         headers={'Authorization': 'Bearer 1' + self.token})
+        return r.status_code
 
-
-print(TestingJWT("Benharushtomer@gmail.com", "aaaaa").get_token())
+jwt = TestingJWT("Benharushtomer@gmail.com", "aaaaa")
+print(jwt.get_token())
+print(jwt.get_user_data())
