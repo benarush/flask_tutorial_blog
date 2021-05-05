@@ -25,9 +25,9 @@ class TestingJWT:
     def get_posts(self):
         r = requests.get("http://127.0.0.1:5000/posts/api",
                          headers={'Authorization': 'Bearer ' + self.token})
-        return r.text
+        return r.status_code
 
-jwt = TestingJWT("Benharushtomer@gmail.com", "aaaaa")
-print(jwt.get_token())
-print(jwt.get_posts())
+# jwt = TestingJWT("Benharushtomer@gmail.com", "aaaaa")
+# print(jwt.get_token())
+# print(jwt.get_posts())
 # print(jwt.get_user_data())

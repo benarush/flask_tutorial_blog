@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import patch
 from testing import TestingJWT
 
-
 class TestEmployee(unittest.TestCase):
 
     @classmethod
@@ -22,9 +21,15 @@ class TestEmployee(unittest.TestCase):
         print('tearDown\n')
 
     def test_get_token(self):
-        print('test_email')
         self.assertEqual(self.jwt_1.get_token(), 200)
+        self.assertEqual(self.jwt_1.get_token(), 200)
+
+    def test_get_posts(self):
+        self.assertEqual(self.jwt_1.get_token(), 200)
+        self.jwt_2.password = 'aaaaa'
         self.assertEqual(self.jwt_2.get_token(), 200)
+        self.assertEqual(self.jwt_1.get_posts(), 200)
+        self.assertEqual(self.jwt_2.get_posts(), 200)
 
 
 if __name__ == '__main__':

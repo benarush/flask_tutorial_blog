@@ -19,7 +19,7 @@ def get_posts():
     posts_q = Post.query.all()
     for post in posts_q:
         posts.append({'title': post.title, 'content': post.content, 'author': post.author.username,
-                      'email': post.email})
+                      'date_posted': post.date_posted})
     print(posts)
     return jsonify(posts=posts), 200
 
