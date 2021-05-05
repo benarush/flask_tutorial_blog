@@ -11,10 +11,13 @@ from datetime import datetime
 users = Blueprint('users', __name__)
 
 
-@users.route("/loginapi", methods=["POST"])
+@users.route("/token", methods=["POST"])
 def get_token():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
+    r = request.args
+    username = request.form.get("username", None) if request.form.get("username", None)\
+        else request.json.get("username", None)
+    password = request.form.get("password", None) if request.form.get("password", None)\
+        else request.json.get("password", None)
     user = User.query.filter_by(email=username).first()
     if user and bcrypt.check_password_hash(user.password, password):
         access_token = create_access_token(identity=user.email)
@@ -24,7 +27,7 @@ def get_token():
 
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.
-@users.route("/get_user", methods=["GET"])
+@users.route("/user/api", methods=["GET"])
 @jwt_required()
 def get_user():
     # Access the identity of the current user with get_jwt_identity
