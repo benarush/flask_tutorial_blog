@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 from testing import TestingJWT
 
+
 class TestEmployee(unittest.TestCase):
 
     @classmethod

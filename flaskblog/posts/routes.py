@@ -15,12 +15,13 @@ posts = Blueprint('posts', __name__,)
 def get_posts():
     # Access the identity of the current user with get_jwt_identity
     current_user = User.query.filter_by(email=get_jwt_identity()).first()
+    if not current_user:
+        return jsonify("user not found"), 403
     posts = []
     posts_q = Post.query.all()
     for post in posts_q:
         posts.append({'title': post.title, 'content': post.content, 'author': post.author.username,
                       'date_posted': post.date_posted})
-    print(posts)
     return jsonify(posts=posts), 200
 
 @posts.route("/post/new", methods=['GET', 'POST'])
