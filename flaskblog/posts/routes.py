@@ -10,7 +10,18 @@ from datetime import datetime
 
 posts = Blueprint('posts', __name__,)
 
-
+@posts.route("/posts/api", methods=["GET"])
+@jwt_required()
+def get_posts():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = User.query.filter_by(email=get_jwt_identity()).first()
+    posts = []
+    posts_q = Post.query.all()
+    for post in posts_q:
+        posts.append({'title': post.title, 'content': post.content, 'author': post.author.username,
+                      'email': post.email})
+    print(posts)
+    return jsonify(posts=posts), 200
 
 @posts.route("/post/new", methods=['GET', 'POST'])
 @login_required
