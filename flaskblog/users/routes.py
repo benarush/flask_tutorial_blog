@@ -11,7 +11,6 @@ from datetime import datetime
 users = Blueprint('users', __name__)
 
 
-
 @users.route("/loginapi", methods=["POST"])
 def get_token():
     username = request.json.get("username", None)
