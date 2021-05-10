@@ -19,5 +19,4 @@ def handle_message2(msg):
 if __name__ == '__main__':
     socketio.run(app)
 #    app.run(debug=True)
-
 #    manager.run()
