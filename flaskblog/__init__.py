@@ -9,9 +9,13 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
+from flask_socketio import SocketIO
+from flask_cors import CORS
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+socketio = SocketIO(cors_allowed_origins='*')
+cors = CORS()
 
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
@@ -30,7 +34,7 @@ admin = Admin()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
-
+    cors.init_app(app)
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
@@ -45,14 +49,18 @@ def create_app(config_class=Config):
     from flaskblog.posts.routes import posts
     from flaskblog.main.routes import main
     from flaskblog.models import User, Post
-
+    from flaskblog.chat.routes import chat
+    
+    app.register_blueprint(chat)
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
+
 
     admin.add_view(ModelView(Post, db.session))
     admin.add_view(ModelView(User, db.session))
 
     manager.add_command('db', MigrateCommand)
+    socketio.init_app(app)
 
-    return app, manager
+    return app, manager, socketio

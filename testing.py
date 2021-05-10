@@ -15,6 +15,7 @@ class TestingJWT:
         }
         r = requests.post("http://127.0.0.1:5000/token", data=data)
         self.token = None if r.status_code != 200 else json.loads(r.text).get("access_token")
+        print(self.token)
         return r.status_code
 
     def get_user_data(self):
@@ -27,7 +28,7 @@ class TestingJWT:
                          headers={'Authorization': 'Bearer ' + self.token})
         return r.status_code
 
-# jwt = TestingJWT("Benharushtomer@gmail.com", "aaaaa")
-# print(jwt.get_token())
+#jwt = TestingJWT("Benharushtomer@gmail.com", "aaaaa")
+#print(jwt.get_token())
 # print(jwt.get_posts())
 # print(jwt.get_user_data())
