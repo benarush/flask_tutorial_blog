@@ -11,4 +11,7 @@ class Config:
     MAIL_PASSWORD = '<gmail password>'
     JWT_SECRET_KEY = SECRET_KEY
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=1)
+    CACHE_TYPE = "SimpleCache"
+    CACHE_DEFAULT_TIMEOUT = 10
+
 

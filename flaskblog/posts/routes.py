@@ -1,12 +1,12 @@
 from flask import (render_template, url_for, flash,
                    redirect, request, abort, Blueprint, jsonify)
 from flask_login import current_user, login_required
-from flaskblog import db
+from flaskblog import db, cache
 from flaskblog.models import Post, User
 from flaskblog.posts.forms import PostForm
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-
+from random import randint
 
 posts = Blueprint('posts', __name__,)
 
@@ -85,3 +85,8 @@ def user_posts(username):
         .paginate(page=page, per_page=5)
     return render_template('user_posts.html', posts=posts, user=user)
 
+@posts.route('/post/test')
+@cache.cached(timeout=5)
+def test():
+    i = randint(0, 10)
+    return f"number is - {i}"

@@ -11,6 +11,8 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_socketio import SocketIO
 from flask_cors import CORS
+from flask_caching import Cache
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -30,6 +32,8 @@ jwt = JWTManager()
 
 admin = Admin()
 
+cache = Cache()
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -44,6 +48,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     manager.__init__(app)
     manager.add_command('db', MigrateCommand)
+    cache.init_app(app)
 
     from flaskblog.users.routes import users
     from flaskblog.posts.routes import posts
