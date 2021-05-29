@@ -90,3 +90,10 @@ def user_posts(username):
 def test():
     i = randint(0, 10)
     return f"number is - {i}"
+
+
+@posts.route('/post/<string:user>/user')
+@cache.memoize(timeout=10)
+def test2(user):
+    i = randint(0, 10)
+    return f"user - {user}, i - {i}"
